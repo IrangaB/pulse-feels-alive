@@ -3,23 +3,30 @@
 require dirname(__DIR__) . '/includes/bootstrap.php';
 
 /* ---------- Session & security ---------- */
-$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
-session_name('pulse_admin');
-session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict', 'secure' => $https]);
-session_start();
-header('X-Frame-Options: DENY');
-header('X-Content-Type-Options: nosniff');
-header('Referrer-Policy: same-origin');
-header('Cache-Control: no-store');
-
+/* ADMIN_DEMO is only set by tools/render-admin.php, which builds read-only screens for the
+   GitHub Pages review copy. It is never set on the real website. */
+$demo = defined('ADMIN_DEMO');
 const SESSION_IDLE_SECONDS = 4 * 3600;
-if (!empty($_SESSION['user']) && time() - ($_SESSION['seen'] ?? 0) > SESSION_IDLE_SECONDS) {
-    $_SESSION = [];
-    session_regenerate_id(true);
-    $_SESSION['flash'] = ['info', 'You were logged out after 4 hours of inactivity. Please log in again.'];
+if ($demo) {
+    $_SESSION = ['user' => 'demo', 'csrf' => 'demo', 'seen' => time()];
+} else {
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+    session_name('pulse_admin');
+    session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict', 'secure' => $https]);
+    session_start();
+    header('X-Frame-Options: DENY');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: same-origin');
+    header('Cache-Control: no-store');
+
+    if (!empty($_SESSION['user']) && time() - ($_SESSION['seen'] ?? 0) > SESSION_IDLE_SECONDS) {
+        $_SESSION = [];
+        session_regenerate_id(true);
+        $_SESSION['flash'] = ['info', 'You were logged out after 4 hours of inactivity. Please log in again.'];
+    }
+    $_SESSION['seen'] = time();
+    $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
 }
-$_SESSION['seen'] = time();
-$_SESSION['csrf'] ??= bin2hex(random_bytes(32));
 
 function csrf_field(): string
 {
@@ -118,9 +125,13 @@ $config = config();
 $installed = !empty($config['password_hash']);
 $loggedIn = $installed && !empty($_SESSION['user']);
 $page = (string) ($_GET['p'] ?? 'products');
+if ($demo) {
+    $installed = true;
+    $loggedIn = $page !== 'login';
+}
 
 /* ---------- Form actions ---------- */
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+if (!$demo && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     if (!hash_equals($_SESSION['csrf'], (string) ($_POST['csrf'] ?? ''))) {
         flash('error', 'Your session expired. Please try again.');
         go();
@@ -302,6 +313,13 @@ unset($_SESSION['flash']);
 $old = $_SESSION['old'] ?? null;
 unset($_SESSION['old']);
 $enquiries = $loggedIn ? store_read('enquiries', []) : [];
+if ($demo) {
+    $enquiries = [
+        ['id' => 'demo1', 'date' => date('c', strtotime('-2 hours')), 'new' => true, 'name' => 'Example: Matti Virtanen', 'email' => 'matti@example.com', 'phone' => '+358 40 000 0000', 'organisation' => 'Example Ice Hockey Club', 'product' => 'T-Shirts', 'quantity' => '40', 'message' => "This is an example enquiry for the review demo.\nWe would like 40 training shirts in our club colours with the logo on the chest."],
+        ['id' => 'demo2', 'date' => date('c', strtotime('-3 days')), 'new' => false, 'name' => 'Example: Anna Korhonen', 'email' => 'anna@example.com', 'phone' => '', 'organisation' => 'Example Company Oy', 'product' => 'Neck Warmers', 'quantity' => '120', 'message' => 'This is an example enquiry for the review demo. Branded neck warmers for our winter event.'],
+    ];
+    $config = ['username' => 'demo', 'notify_email' => 'sales@example.com', 'from_email' => ''];
+}
 $newCount = count(array_filter($enquiries, fn($e) => !empty($e['new'])));
 
 function text_field(string $name, string $label, string $value, string $kind, string $help = ''): string
@@ -510,10 +528,10 @@ function media_field(string $name, string $label, string $value, string $kind): 
     </article>
     <?php endforeach; ?>
   </section>
-  <?php if ($newCount) store_update('enquiries', [], fn($list) => array_map(fn($e) => ['new' => false] + $e, $list)); ?>
+  <?php if ($newCount && !$demo) store_update('enquiries', [], fn($list) => array_map(fn($e) => ['new' => false] + $e, $list)); ?>
 
 <?php elseif ($page === 'settings'): /* ---------- Settings ---------- */
-    $config = config();
+    if (!$demo) $config = config();
 ?>
   <section class="panel narrow">
     <h2>Enquiry emails</h2>

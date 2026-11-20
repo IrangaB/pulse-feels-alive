@@ -176,7 +176,7 @@ $static = defined('STATIC_EXPORT'); // used when building the GitHub review prev
   <footer class="footer">
     <a href="#home" class="footer-logo"><img src="assets/images/pulse-logo.png" alt="PULSE · FEELS ALIVE"></a>
     <p><?= h($footer['tagline']) ?></p>
-    <div class="footer-links"><a href="#story">Our Story</a><a href="#products">Products</a><a href="#contact">Get a Quote</a><?php if (!$static): ?><a href="admin/" rel="nofollow">Admin</a><?php endif; ?></div>
+    <div class="footer-links"><a href="#story">Our Story</a><a href="#products">Products</a><a href="#contact">Get a Quote</a><a href="admin/" rel="nofollow">Admin</a></div>
     <p class="company-details"><?= str_replace('  ', '&nbsp; ', h($footer['company_details'])) ?></p>
     <p class="copyright">© <span id="year"><?= date('Y') ?></span> PULSE · FEELS ALIVE. All rights reserved.</p>
   </footer>
