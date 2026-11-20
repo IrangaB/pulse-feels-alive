@@ -1,0 +1,47 @@
+# Uploads the website to a PHP host by FTP on every push to main.
+# Switched off until these repository secrets exist (GitHub repo → Settings → Secrets and variables → Actions):
+#   FTP_SERVER     e.g. ftpupload.net
+#   FTP_USERNAME   the FTP username from the hosting control panel
+#   FTP_PASSWORD   the FTP password
+#   FTP_DIR        the web folder on the server, ending with / (e.g. /htdocs/ or /public_html/)
+# The customer's content (data/ and uploads/) is never uploaded, overwritten or deleted.
+name: Deploy to PHP host
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+    steps:
+      - name: Skip when FTP is not set up
+        if: env.FTP_SERVER == ''
+        run: echo "FTP secrets are not set, so nothing was deployed."
+      - uses: actions/checkout@v4
+        if: env.FTP_SERVER != ''
+      - name: Upload changed files
+        if: env.FTP_SERVER != ''
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            tools/**
+            dist/**
+            _site/**
+            data/**
+            uploads/**
+            README.txt
