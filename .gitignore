@@ -1,0 +1,7 @@
+# Live website data (created on the hosting, never committed)
+data/*
+!data/.htaccess
+uploads/*
+!uploads/.htaccess
+.DS_Store
+_site/

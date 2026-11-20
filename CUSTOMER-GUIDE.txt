@@ -1,0 +1,90 @@
+PULSE · FEELS ALIVE — HOW TO UPDATE YOUR WEBSITE
+================================================
+
+You can change your website yourself from your admin page. You do not need a developer, and you
+do not need any extra software. A web browser on a computer, tablet or phone is enough.
+
+Admin page:  https://<your-domain>/admin
+Log in with the username and password you chose during setup.
+
+Every change is live on the website as soon as you press Save.
+
+
+THE ADMIN SECTIONS
+------------------
+Products          The "Product Gallery" on the website
+Fabrics           The "Explore our Fabrics" section
+Texts & photos    Banner headline and video, introduction, Our Story text and photo,
+                  feature bar image, section headings
+Contact & footer  Contact section text and bullet points, footer text, company details
+Enquiries         Every message sent through the website's contact form
+Settings          Where enquiry emails are sent, and your username and password
+
+
+PRODUCTS AND FABRICS
+--------------------
+Add a product
+  1. Products → "+ Add product".
+  2. Enter the product name, choose an image and enter a display order number.
+  3. Tick "Online" to show it on the website straight away, or leave it unticked to save it as
+     a Draft.
+  4. Press Save.
+
+Online or Draft
+  • Online = visible on the website.
+  • Draft  = saved in the admin page but NOT visible to visitors.
+  In the list, use the "Put online" / "Set to draft" button to switch at any time.
+  Use the "Drafts" filter at the top of the list to see all your drafts.
+
+Change a product
+  Press "Edit", change what you need and press Save. To keep the current image, leave the image
+  field empty.
+
+Change the order
+  Lower display order numbers are shown first. Tip: use 10, 20, 30 … so you can later put a new
+  item in between (for example 15) without renumbering everything.
+
+Delete a product
+  Press "Delete" and confirm. This cannot be undone. If you might need the item again, use
+  "Set to draft" instead.
+
+Fabrics work the same way. They also have a description, which is shown under the fabric name.
+
+
+IMAGE TIPS
+----------
+Products   The website does NOT write the product name or badges (e.g. "Coming Soon") on top of
+           the picture. Put them into the image itself, in the same style as the current
+           T-Shirts, Neck Warmers and Pipos images. Use square images, about 1000 × 1000 px.
+           The product name you type is used in the contact form's product list and by
+           search engines.
+Fabrics    Upright images, about 800 × 1000 px. The picture is cropped to this shape, so keep
+           the important part in the centre.
+Banner     Background video: MP4, up to 60 MB. A short loop (10–20 seconds) loads fastest.
+All        JPG, PNG or WebP, up to 10 MB each.
+
+
+TEXTS & PHOTOS, CONTACT & FOOTER
+--------------------------------
+Change any text and press "Save changes" at the bottom.
+  • "Heading, red ending" is the part of a heading shown in red (e.g. "Our" + "Story").
+  • In longer texts, leave an empty line between paragraphs.
+  • Bullet points: one per line.
+To replace a photo or the video, choose a new file. Leave the field empty to keep the current one.
+
+
+ENQUIRIES
+---------
+Every message from the contact form is:
+  • emailed to the address(es) under Settings, and
+  • listed under Enquiries (new ones are marked "New").
+Press the email address to reply. If emails stop arriving, check your spam folder, then use
+Settings → "Send a test email".
+
+
+YOUR LOGIN
+----------
+Change your username or password under Settings. You need your current password to do this.
+After 5 wrong passwords, logging in is blocked for 15 minutes.
+You are logged out automatically after 4 hours of inactivity.
+Forgot your password? Contact your website developer to reset it. Your content is kept.
