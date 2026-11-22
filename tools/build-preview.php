@@ -33,6 +33,7 @@ foreach ($it as $file) {
 require $root . '/includes/bootstrap.php';
 @mkdir("$out/admin", 0755, true);
 copy("$root/admin/admin.css", "$out/admin/admin.css");
+copy("$root/admin/admin.js", "$out/admin/admin.js");
 $render = function (string $file, string ...$args) use ($root, $out) {
     file_put_contents("$out/admin/$file", run_php(array_merge(["$root/tools/render-admin.php"], $args)));
 };

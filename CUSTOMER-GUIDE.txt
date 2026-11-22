@@ -41,6 +41,12 @@ Online or Draft
   In the list, use the "Put online" / "Set to draft" button to switch at any time.
   Use the "Drafts" filter at the top of the list to see all your drafts.
 
+Check the picture before saving
+  As soon as you choose a file, a preview appears under it, marked "not saved yet", in the
+  same shape as on the website. If it is the wrong picture, press "Remove" (or choose another
+  file) before pressing Save. Files that cannot be used (wrong type or too large) are flagged
+  in red straight away.
+
 Change an item
   Press "Edit", change what you need and press Save. To keep the current image, leave the image
   field empty.

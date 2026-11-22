@@ -83,3 +83,15 @@ code { background: var(--bg); padding: 1px 5px; }
   .brand img { height: 36px; }
   .panel { padding: 18px; }
 }
+/* Preview of a chosen file before it is saved */
+.upload-preview { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px; padding: 12px; border: 1px dashed var(--red); background: #fff8f8; max-width: 100%; }
+.upload-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--red); }
+.upload-frame { width: 220px; max-width: 100%; overflow: hidden; border: 1px solid var(--border); background: var(--bg); }
+.upload-frame img, .upload-frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.upload-square, .upload-square-contain { aspect-ratio: 1 / 1; }
+.upload-square-contain { background: var(--white); }
+.upload-square-contain img { object-fit: contain; }
+.upload-portrait { width: 176px; aspect-ratio: 4 / 5; }
+.upload-wide, .upload-video { width: 320px; }
+.upload-wide img, .upload-video video { height: auto; object-fit: contain; }
+.help-error { color: #b00020; font-weight: 700; }

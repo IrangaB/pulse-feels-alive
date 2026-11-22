@@ -137,6 +137,7 @@ $ITEM_TYPES = [
         'name_help' => 'Used in the enquiry form product list and for search engines. On the website, the name shown is the one inside the image.',
         'image_label' => 'Image',
         'image_help' => 'Square image, about 1000 × 1000 px. Put the category name and any badge (e.g. "Coming Soon") inside the image.',
+        'preview' => 'square-contain',
     ],
     'gallery' => [
         'plural' => 'Product gallery', 'singular' => 'gallery photo',
@@ -144,6 +145,7 @@ $ITEM_TYPES = [
         'name_help' => 'Shown under the photo on the Product Gallery page.',
         'image_label' => 'Product photo',
         'image_help' => 'Square photos look best, about 1000 × 1000 px. The photo is cropped to a square, so keep the product in the centre.',
+        'preview' => 'square',
     ],
     'fabrics' => [
         'plural' => 'Fabrics', 'singular' => 'fabric',
@@ -152,6 +154,7 @@ $ITEM_TYPES = [
         'image_label' => 'Image',
         'image_help' => 'Upright image, about 800 × 1000 px. The picture is cropped to this shape.',
         'description' => true,
+        'preview' => 'portrait',
     ],
     'customers' => [
         'plural' => 'Customers', 'singular' => 'customer',
@@ -161,6 +164,7 @@ $ITEM_TYPES = [
         'image_help' => 'PNG with a transparent or white background works best, at least 400 px wide.',
         'url' => true,
         'contain' => true,
+        'preview' => 'square-contain',
     ],
 ];
 
@@ -388,7 +392,7 @@ function media_field(string $name, string $label, string $value, string $kind): 
         : '<img src="' . h(site_url($value)) . '" alt="" class="thumb thumb-wide">';
     $accept = $kind === 'video' ? 'video/mp4' : 'image/jpeg,image/png,image/webp,image/gif';
     return '<div class="field"><label for="' . $id . '">' . h($label) . '</label>'
-        . '<div class="media-row">' . ($value !== '' ? $preview : '') . '<div><input id="' . $id . '" name="' . h($name) . '" type="file" accept="' . $accept . '">'
+        . '<div class="media-row">' . ($value !== '' ? $preview : '') . '<div><input id="' . $id . '" name="' . h($name) . '" type="file" accept="' . $accept . '" data-preview="' . ($kind === 'video' ? 'video' : 'wide') . '">'
         . '<p class="help">Leave empty to keep the current ' . ($kind === 'video' ? 'video' : 'image') . '.</p></div></div></div>';
 }
 ?>
@@ -483,7 +487,7 @@ function media_field(string $name, string $label, string $value, string $kind): 
         <div class="media-row">
           <?php if ($editing['image']): ?><img src="<?= h(site_url($editing['image'])) ?>" alt="" class="thumb thumb-large<?= !empty($meta['contain']) ? ' thumb-contain' : '' ?>"><?php endif; ?>
           <div>
-            <input id="f-image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"<?= $editing['id'] === '' ? ' required' : '' ?>>
+            <input id="f-image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-preview="<?= h($meta['preview']) ?>"<?= $editing['id'] === '' ? ' required' : '' ?>>
             <p class="help"><?= h($meta['image_help']) ?><?= $editing['id'] !== '' ? ' Leave empty to keep the current image.' : '' ?></p>
           </div>
         </div>
@@ -607,5 +611,6 @@ function media_field(string $name, string $label, string $value, string $kind): 
   <section class="panel"><p>Page not found. <a href="index.php">Go to Products</a></p></section>
 <?php endif; ?>
 </main>
+<script src="admin.js"></script>
 </body>
 </html>
