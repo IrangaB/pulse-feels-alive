@@ -94,11 +94,24 @@ $TEXT_GROUPS = [
             'title_accent' => ['Heading, red ending', 'text'],
             'text' => ['Text', 'textarea'],
         ]],
-        'products_section' => ['Product Gallery heading', [
+        'products_section' => ['Product Categories heading (home page)', [
             'eyebrow' => ['Small red heading', 'text'],
             'title' => ['Heading', 'text'],
             'title_accent' => ['Heading, red ending', 'text'],
             'text' => ['Text', 'textarea'],
+        ]],
+        'gallery_page' => ['Product Gallery page', [
+            'eyebrow' => ['Small red heading', 'text'],
+            'title' => ['Heading', 'text'],
+            'title_accent' => ['Heading, red ending', 'text'],
+            'text' => ['Text', 'textarea'],
+        ]],
+        'customers_page' => ['Our Customers page', [
+            'eyebrow' => ['Small red heading', 'text'],
+            'title' => ['Heading', 'text'],
+            'title_accent' => ['Heading, red ending', 'text'],
+            'text' => ['Text', 'textarea'],
+            'button_label' => ['Button text (leads to the enquiry form)', 'text'],
         ]],
     ],
     'contact' => [
@@ -116,9 +129,39 @@ $TEXT_GROUPS = [
     ],
 ];
 
+/* The lists the customer manages. Each entry describes the labels and extra fields of its form. */
 $ITEM_TYPES = [
-    'products' => ['plural' => 'Products', 'singular' => 'product'],
-    'fabrics' => ['plural' => 'Fabrics', 'singular' => 'fabric'],
+    'products' => [
+        'plural' => 'Product categories', 'singular' => 'category',
+        'name_label' => 'Category name',
+        'name_help' => 'Used in the enquiry form product list and for search engines. On the website, the name shown is the one inside the image.',
+        'image_label' => 'Image',
+        'image_help' => 'Square image, about 1000 × 1000 px. Put the category name and any badge (e.g. "Coming Soon") inside the image.',
+    ],
+    'gallery' => [
+        'plural' => 'Product gallery', 'singular' => 'gallery photo',
+        'name_label' => 'Club or customer name',
+        'name_help' => 'Shown under the photo on the Product Gallery page.',
+        'image_label' => 'Product photo',
+        'image_help' => 'Square photos look best, about 1000 × 1000 px. The photo is cropped to a square, so keep the product in the centre.',
+    ],
+    'fabrics' => [
+        'plural' => 'Fabrics', 'singular' => 'fabric',
+        'name_label' => 'Fabric name',
+        'name_help' => 'Shown under the picture.',
+        'image_label' => 'Image',
+        'image_help' => 'Upright image, about 800 × 1000 px. The picture is cropped to this shape.',
+        'description' => true,
+    ],
+    'customers' => [
+        'plural' => 'Customers', 'singular' => 'customer',
+        'name_label' => 'Customer name',
+        'name_help' => 'Shown under the logo in the logo grid on the Our Customers page.',
+        'image_label' => 'Logo',
+        'image_help' => 'PNG with a transparent or white background works best, at least 400 px wide.',
+        'url' => true,
+        'contain' => true,
+    ],
 ];
 
 $config = config();
@@ -205,7 +248,13 @@ if (!$demo && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 if ($index === null && $image === null) throw new RuntimeException('Please choose an image.');
                 $item = $index === null ? ['id' => bin2hex(random_bytes(6))] : $c[$type][$index];
                 $item['name'] = $name;
-                if ($type === 'fabrics') $item['description'] = post('description', 600);
+                if (!empty($ITEM_TYPES[$type]['description'])) $item['description'] = post('description', 600);
+                if (!empty($ITEM_TYPES[$type]['url'])) {
+                    $url = post('url', 300);
+                    if ($url !== '' && !preg_match('~^https?://~i', $url)) $url = 'https://' . $url;
+                    if ($url !== '' && !filter_var($url, FILTER_VALIDATE_URL)) throw new RuntimeException('The website address is not valid. Example: https://www.example.fi');
+                    $item['url'] = $url;
+                }
                 $item['order'] = $orderRaw === '' ? null : $orderRaw + 0;
                 $item['online'] = !empty($_POST['online']);
                 if ($image !== null) $item['image'] = $image;
@@ -365,7 +414,7 @@ function media_field(string $name, string $label, string $value, string $kind): 
 
 <?php if ($loggedIn): ?>
 <nav class="tabs" aria-label="Admin sections">
-  <?php foreach (['products' => 'Products', 'fabrics' => 'Fabrics', 'texts' => 'Texts & photos', 'contact' => 'Contact & footer', 'enquiries' => 'Enquiries', 'settings' => 'Settings'] as $key => $label): ?>
+  <?php foreach (['products' => 'Categories', 'gallery' => 'Gallery', 'fabrics' => 'Fabrics', 'customers' => 'Customers', 'texts' => 'Texts & photos', 'contact' => 'Contact & footer', 'enquiries' => 'Enquiries', 'settings' => 'Settings'] as $key => $label): ?>
   <a href="?p=<?= $key ?>" class="<?= $page === $key ? 'active' : '' ?>"><?= h($label) ?><?php if ($key === 'enquiries' && $newCount): ?> <span class="badge"><?= $newCount ?></span><?php endif; ?></a>
   <?php endforeach; ?>
 </nav>
@@ -387,7 +436,7 @@ function media_field(string $name, string $label, string $value, string $kind): 
         <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required></div>
         <div class="field"><label for="password">Password (at least 10 characters)</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required></div>
         <div class="field"><label for="password_confirm">Repeat password</label><input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="10" required></div>
-        <div class="field"><label for="notify_email">Email address for new enquiries</label><input id="notify_email" name="notify_email" type="email" autocomplete="email"></div>
+        <div class="field"><label for="notify_email">Email address for new enquiries</label><input id="notify_email" name="notify_email" type="email" autocomplete="email" value="<?= h(DEFAULT_NOTIFY_EMAIL) ?>"></div>
         <button class="btn" type="submit">Create admin login</button>
       </form>
     <?php endif; ?>
@@ -404,17 +453,17 @@ function media_field(string $name, string $label, string $value, string $kind): 
     </form>
   </section>
 
-<?php elseif (isset($ITEM_TYPES[$page])): /* ---------- Products / Fabrics ---------- */
+<?php elseif (isset($ITEM_TYPES[$page])): /* ---------- Categories / Gallery / Fabrics / Customers ---------- */
     $type = $page;
     $meta = $ITEM_TYPES[$type];
     $c = content();
     $items = sort_items($c[$type]);
     $editId = (string) ($_GET['edit'] ?? '');
     $editing = null;
-    if ($editId === 'new') $editing = ['id' => '', 'name' => '', 'description' => '', 'image' => '', 'order' => '', 'online' => false];
+    if ($editId === 'new') $editing = ['id' => '', 'name' => '', 'description' => '', 'url' => '', 'image' => '', 'order' => '', 'online' => false];
     foreach ($items as $item) if ($editId !== '' && ($item['id'] ?? '') === $editId) $editing = $item;
     if ($editing && $old && ($old['id'] ?? '') === $editing['id']) {
-        $editing = array_merge($editing, array_intersect_key($old, array_flip(['name', 'description', 'order'])), ['online' => !empty($old['online'])]);
+        $editing = array_merge($editing, array_intersect_key($old, array_flip(['name', 'description', 'url', 'order'])), ['online' => !empty($old['online'])]);
     }
 ?>
   <?php if ($editing !== null): ?>
@@ -426,18 +475,16 @@ function media_field(string $name, string $label, string $value, string $kind): 
       <input type="hidden" name="type" value="<?= $type ?>">
       <input type="hidden" name="id" value="<?= h($editing['id']) ?>">
       <input type="hidden" name="back" value="p=<?= $type ?>&edit=<?= h($editing['id'] === '' ? 'new' : $editing['id']) ?>">
-      <?= text_field('name', $type === 'products' ? 'Product name' : 'Fabric name', (string) $editing['name'], 'text',
-          $type === 'products' ? 'Used in the enquiry form product list and for search engines. On the website, the name shown is the one inside the image.' : 'Shown under the picture.') ?>
-      <?php if ($type === 'fabrics'): ?><?= text_field('description', 'Description', (string) ($editing['description'] ?? ''), 'textarea', 'Shown under the fabric name.') ?><?php endif; ?>
+      <?= text_field('name', $meta['name_label'], (string) $editing['name'], 'text', $meta['name_help']) ?>
+      <?php if (!empty($meta['description'])): ?><?= text_field('description', 'Description', (string) ($editing['description'] ?? ''), 'textarea', 'Shown under the name.') ?><?php endif; ?>
+      <?php if (!empty($meta['url'])): ?><?= text_field('url', 'Website (optional)', (string) ($editing['url'] ?? ''), 'text', 'If filled in, clicking the logo opens this website. Example: https://www.example.fi') ?><?php endif; ?>
       <div class="field">
-        <label for="f-image">Image<?= $editing['id'] === '' ? ' *' : '' ?></label>
+        <label for="f-image"><?= h($meta['image_label']) ?><?= $editing['id'] === '' ? ' *' : '' ?></label>
         <div class="media-row">
-          <?php if ($editing['image']): ?><img src="<?= h(site_url($editing['image'])) ?>" alt="" class="thumb thumb-large"><?php endif; ?>
+          <?php if ($editing['image']): ?><img src="<?= h(site_url($editing['image'])) ?>" alt="" class="thumb thumb-large<?= !empty($meta['contain']) ? ' thumb-contain' : '' ?>"><?php endif; ?>
           <div>
             <input id="f-image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif"<?= $editing['id'] === '' ? ' required' : '' ?>>
-            <p class="help"><?= $type === 'products'
-                ? 'Square image, about 1000 × 1000 px. Put the product name and any badge (e.g. "Coming Soon") inside the image.'
-                : 'Upright image, about 800 × 1000 px. The picture is cropped to this shape.' ?><?= $editing['id'] !== '' ? ' Leave empty to keep the current image.' : '' ?></p>
+            <p class="help"><?= h($meta['image_help']) ?><?= $editing['id'] !== '' ? ' Leave empty to keep the current image.' : '' ?></p>
           </div>
         </div>
       </div>
@@ -467,10 +514,11 @@ function media_field(string $name, string $label, string $value, string $kind): 
     <ul class="item-list">
       <?php foreach ($listed as $item): ?>
       <li class="item">
-        <img src="<?= h(site_url($item['image'] ?? '')) ?>" alt="" class="thumb">
+        <img src="<?= h(site_url($item['image'] ?? '')) ?>" alt="" class="thumb<?= !empty($meta['contain']) ? ' thumb-contain' : '' ?>">
         <div class="item-main">
           <strong><?= h($item['name']) ?></strong>
-          <?php if ($type === 'fabrics' && !empty($item['description'])): ?><span class="muted clamp"><?= h($item['description']) ?></span><?php endif; ?>
+          <?php if (!empty($meta['description']) && !empty($item['description'])): ?><span class="muted clamp"><?= h($item['description']) ?></span><?php endif; ?>
+          <?php if (!empty($meta['url']) && !empty($item['url'])): ?><span class="muted clamp"><?= h($item['url']) ?></span><?php endif; ?>
           <span class="muted">Order: <?= h((string) ($item['order'] ?? '–')) ?></span>
         </div>
         <span class="pill <?= !empty($item['online']) ? 'pill-online' : 'pill-draft' ?>"><?= !empty($item['online']) ? 'Online' : 'Draft' ?></span>

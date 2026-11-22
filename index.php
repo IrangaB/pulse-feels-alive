@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/includes/bootstrap.php';
+require __DIR__ . '/includes/layout.php';
 $c = content();
 $products = visible_items($c['products']);
 $fabrics = visible_items($c['fabrics']);
@@ -7,56 +8,11 @@ $hero = $c['hero'];
 $intro = $c['intro'];
 $story = $c['story'];
 $contact = $c['contact'];
-$footer = $c['footer'];
 $sent = isset($_GET['sent']);
-$static = defined('STATIC_EXPORT'); // used when building the GitHub review preview
+$static = is_static(); // true when building the GitHub review preview
+render_head('PULSE · FEELS ALIVE | Custom Apparel', 'PULSE · FEELS ALIVE creates fully customised printed apparel and accessories for teams, clubs, businesses and brands.');
+render_header('home');
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PULSE · FEELS ALIVE creates fully customised printed apparel and accessories for teams, clubs, businesses and brands.">
-  <meta name="theme-color" content="#171717">
-  <title>PULSE · FEELS ALIVE | Custom Apparel</title>
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    .facts-image-strip {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      line-height: 0;
-      overflow: hidden;
-      background: #fff;
-    }
-    .facts-image-strip img {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      object-fit: contain;
-    }
-  </style>
-
-
-
-</head>
-<body>
-  <header class="header">
-    <a class="logo-link" href="#home" aria-label="PULSE home">
-      <img src="assets/images/pulse-logo.png" alt="PULSE · FEELS ALIVE" class="logo">
-    </a>
-    <button class="menu-button" id="menuButton" aria-label="Open menu" aria-expanded="false">☰</button>
-    <nav class="navigation" id="navigation" aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#story">Our Story</a>
-      <a href="#fabrics">Fabrics</a>
-      <a href="#products">Products</a>
-      <a class="nav-quote" href="#contact">Get a Quote</a>
-    </nav>
-  </header>
-
   <main>
     <section class="hero" id="home">
       <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="<?= h($hero['poster']) ?>">
@@ -172,14 +128,4 @@ $static = defined('STATIC_EXPORT'); // used when building the GitHub review prev
       </form>
     </section>
   </main>
-
-  <footer class="footer">
-    <a href="#home" class="footer-logo"><img src="assets/images/pulse-logo.png" alt="PULSE · FEELS ALIVE"></a>
-    <p><?= h($footer['tagline']) ?></p>
-    <div class="footer-links"><a href="#story">Our Story</a><a href="#products">Products</a><a href="#contact">Get a Quote</a><a href="admin/" rel="nofollow">Admin</a></div>
-    <p class="company-details"><?= str_replace('  ', '&nbsp; ', h($footer['company_details'])) ?></p>
-    <p class="copyright">© <span id="year"><?= date('Y') ?></span> PULSE · FEELS ALIVE. All rights reserved.</p>
-  </footer>
-  <script src="script.js"></script>
-</body>
-</html>
+<?php render_footer($c, 'home'); ?>

@@ -12,20 +12,25 @@ Every change is live on the website as soon as you press Save.
 
 THE ADMIN SECTIONS
 ------------------
-Products          The "Product Gallery" on the website
+Categories        The "Product Categories" section on the home page
+Gallery           The "Product Gallery" page: photos of finished products with the club name
 Fabrics           The "Explore our Fabrics" section
+Customers         The "Our Customers" page: the moving logo band and the logo grid
 Texts & photos    Banner headline and video, introduction, Our Story text and photo,
-                  feature bar image, section headings
+                  feature bar image, section headings, Product Gallery and Our Customers
+                  page headings
 Contact & footer  Contact section text and bullet points, footer text, company details
 Enquiries         Every message sent through the website's contact form
 Settings          Where enquiry emails are sent, and your username and password
 
 
-PRODUCTS AND FABRICS
---------------------
-Add a product
-  1. Products → "+ Add product".
-  2. Enter the product name, choose an image and enter a display order number.
+CATEGORIES, GALLERY, FABRICS AND CUSTOMERS
+------------------------------------------
+These four lists all work the same way. Example: adding a product category.
+
+Add an item
+  1. Categories → "+ Add category".
+  2. Enter the name, choose an image and enter a display order number.
   3. Tick "Online" to show it on the website straight away, or leave it unticked to save it as
      a Draft.
   4. Press Save.
@@ -36,7 +41,7 @@ Online or Draft
   In the list, use the "Put online" / "Set to draft" button to switch at any time.
   Use the "Drafts" filter at the top of the list to see all your drafts.
 
-Change a product
+Change an item
   Press "Edit", change what you need and press Save. To keep the current image, leave the image
   field empty.
 
@@ -44,20 +49,28 @@ Change the order
   Lower display order numbers are shown first. Tip: use 10, 20, 30 … so you can later put a new
   item in between (for example 15) without renumbering everything.
 
-Delete a product
+Delete an item
   Press "Delete" and confirm. This cannot be undone. If you might need the item again, use
   "Set to draft" instead.
 
-Fabrics work the same way. They also have a description, which is shown under the fabric name.
+What is different per list
+  • Gallery: the name is the club or customer the product was made for. It is shown under the
+    photo.
+  • Fabrics: also have a description, shown under the fabric name.
+  • Customers: the image is the customer's logo. You can also enter their website: then
+    clicking the logo opens that website. The logos scroll across the page automatically
+    (the band pauses when a visitor points at it) and are also shown in a grid below.
 
 
 IMAGE TIPS
 ----------
-Products   The website does NOT write the product name or badges (e.g. "Coming Soon") on top of
-           the picture. Put them into the image itself, in the same style as the current
+Categories The website does NOT write the category name or badges (e.g. "Coming Soon") on top
+           of the picture. Put them into the image itself, in the same style as the current
            T-Shirts, Neck Warmers and Pipos images. Use square images, about 1000 × 1000 px.
-           The product name you type is used in the contact form's product list and by
-           search engines.
+           The name you type is used in the contact form's product list and by search engines.
+Gallery    Square photos look best, about 1000 × 1000 px. Photos are cropped to a square, so
+           keep the product in the centre.
+Customers  Logos as PNG with a transparent or white background, at least 400 px wide.
 Fabrics    Upright images, about 800 × 1000 px. The picture is cropped to this shape, so keep
            the important part in the centre.
 Banner     Background video: MP4, up to 60 MB. A short loop (10–20 seconds) loads fastest.
@@ -76,7 +89,7 @@ To replace a photo or the video, choose a new file. Leave the field empty to kee
 ENQUIRIES
 ---------
 Every message from the contact form is:
-  • emailed to the address(es) under Settings, and
+  • emailed to the address(es) under Settings (dhevapriya@csuomi.fi unless you change it), and
   • listed under Enquiries (new ones are marked "New").
 Press the email address to reply. If emails stop arriving, check your spam folder, then use
 Settings → "Send a test email".

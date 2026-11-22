@@ -1,17 +1,25 @@
 <?php
-/* Builds a static review copy of the website (no admin, form switched off) for GitHub Pages.
+/* Builds a static review copy of the website (form switched off, read-only admin demo) for GitHub Pages.
    Usage: php tools/build-preview.php <output-folder>   — run automatically by .github/workflows/review-preview.yml */
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 $root = dirname(__DIR__);
 $out = rtrim($argv[1] ?? $root . '/_site', '/');
 @mkdir($out, 0755, true);
 
-define('STATIC_EXPORT', true);
-ob_start();
-require $root . '/index.php';
-$html = ob_get_clean();
-$html = str_replace('<meta name="theme-color"', '<meta name="robots" content="noindex, nofollow">' . "\n  " . '<meta name="theme-color"', $html);
-file_put_contents("$out/index.html", $html);
+/* Renders one PHP page in a separate process (each page declares its own functions). */
+function run_php(array $args): string
+{
+    $cmd = escapeshellarg(PHP_BINARY);
+    foreach ($args as $arg) $cmd .= ' ' . escapeshellarg($arg);
+    exec($cmd, $lines, $status);
+    if ($status !== 0) { fwrite(STDERR, "Failed: $cmd\n"); exit(1); }
+    return implode("\n", $lines);
+}
+
+foreach (['index', 'gallery', 'customers'] as $page) {
+    $html = run_php(['-r', 'define("STATIC_EXPORT", true); require $argv[1];', "$root/$page.php"]);
+    file_put_contents("$out/$page.html", $html);
+}
 
 foreach (['style.css', 'script.js'] as $file) copy("$root/$file", "$out/$file");
 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$root/assets", FilesystemIterator::SKIP_DOTS));
@@ -20,19 +28,17 @@ foreach ($it as $file) {
     @mkdir(dirname($target), 0755, true);
     copy($file->getPathname(), $target);
 }
+
 /* Read-only admin screens, so the customer can see how the admin page works. */
+require $root . '/includes/bootstrap.php';
 @mkdir("$out/admin", 0755, true);
 copy("$root/admin/admin.css", "$out/admin/admin.css");
 $render = function (string $file, string ...$args) use ($root, $out) {
-    $cmd = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg("$root/tools/render-admin.php");
-    foreach ($args as $arg) $cmd .= ' ' . escapeshellarg($arg);
-    exec($cmd, $lines, $status);
-    if ($status !== 0) { fwrite(STDERR, "Failed to render admin page $file\n"); exit(1); }
-    file_put_contents("$out/admin/$file", implode("\n", $lines));
+    file_put_contents("$out/admin/$file", run_php(array_merge(["$root/tools/render-admin.php"], $args)));
 };
 $render('index.html', 'login');
 $content = content();
-foreach (['products', 'fabrics'] as $type) {
+foreach (LIST_SECTIONS as $type) {
     $render("$type.html", $type);
     $render("$type-online.html", $type, '', 'online');
     $render("$type-drafts.html", $type, '', 'drafts');

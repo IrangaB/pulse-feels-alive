@@ -25,7 +25,8 @@ GOING LIVE (FIRST TIME)
    manager. Do NOT upload: .git, .github, _site.
    DO upload data/setup-code.php. It is not in GitHub on purpose, so take it from this computer.
 2. Open https://<domain>/admin. Enter the setup code (inside data/setup-code.php), then choose the
-   admin username, password and the email address for enquiries.
+   admin username, password and the email address for enquiries
+   (prefilled with dhevapriya@csuomi.fi, which is also used whenever no address is set).
    The setup code file deletes itself after use.
    Do this straight after uploading: until it is done, anyone with the setup code could create
    the login.
@@ -58,9 +59,13 @@ php -S 127.0.0.1:8000   (run in this folder), then open http://127.0.0.1:8000 an
 Local test data is written to /data and /uploads. Both are excluded from Git.
 
 FILES
-index.php              the website (same design as before, content filled in from /data)
+index.php              the home page (content filled in from /data)
+gallery.php            Product Gallery page
+customers.php          Our Customers page (moving logo band + logo grid)
+includes/layout.php    shared head, header/menu and footer
 contact.php            receives the enquiry form: saves it and emails it
 admin/                 the admin page
 includes/bootstrap.php storage, uploads, email and security helpers
 includes/defaults.php  the original content, used until the customer saves changes
 tools/build-preview.php builds the static review copy
+tools/render-admin.php  renders the read-only admin demo screens for the review copy

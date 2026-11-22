@@ -14,6 +14,8 @@ define('UPLOAD_DIR', ROOT . '/uploads');
 const STORE_GUARD = "<?php exit; ?>\n"; // stops data files from being read in a browser
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 60 * 1024 * 1024;
+const DEFAULT_NOTIFY_EMAIL = 'dhevapriya@csuomi.fi'; // used when no address is set in Admin → Settings
+const LIST_SECTIONS = ['products', 'fabrics', 'gallery', 'customers'];
 
 function h($value): string
 {
@@ -93,7 +95,7 @@ function content(): array
     $result = $defaults;
     foreach ($defaults as $section => $value) {
         if (!array_key_exists($section, $saved)) continue;
-        if (in_array($section, ['products', 'fabrics'], true)) {
+        if (in_array($section, LIST_SECTIONS, true)) {
             $result[$section] = is_array($saved[$section]) ? array_values($saved[$section]) : $value;
         } elseif (is_array($saved[$section])) {
             $result[$section] = array_merge($value, $saved[$section]);
@@ -261,6 +263,7 @@ function send_notification(string $subject, string $body, string $replyTo = ''):
     $config = config();
     $recipients = array_filter(array_map('trim', explode(',', (string) ($config['notify_email'] ?? ''))),
         fn($a) => filter_var($a, FILTER_VALIDATE_EMAIL));
+    if (!$recipients) $recipients = [DEFAULT_NOTIFY_EMAIL];
     if (!$recipients) return false;
     $clean = fn(string $s) => str_replace(["\r", "\n"], ' ', $s);
     $host = strtolower(preg_replace('/[^a-z0-9.-]/i', '', explode(':', $_SERVER['HTTP_HOST'] ?? 'localhost')[0]));

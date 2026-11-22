@@ -41,8 +41,21 @@ return [
     'products_section' => [
         'eyebrow' => 'WHAT WE MAKE',
         'title' => 'Product',
-        'title_accent' => 'Gallery',
+        'title_accent' => 'Categories',
         'text' => 'Customise apparel and accessories with your own artwork, colours and identity.',
+    ],
+    'gallery_page' => [
+        'eyebrow' => 'MADE BY PULSE',
+        'title' => 'Product',
+        'title_accent' => 'Gallery',
+        'text' => 'A selection of custom apparel we have designed and produced for clubs, teams and businesses.',
+    ],
+    'customers_page' => [
+        'eyebrow' => 'TRUSTED BY',
+        'title' => 'Our',
+        'title_accent' => 'Customers',
+        'text' => 'We are proud to create custom apparel for these clubs, teams and businesses.',
+        'button_label' => 'Request a Quote',
     ],
     'contact' => [
         'eyebrow' => 'START A PROJECT',
@@ -60,6 +73,8 @@ return [
         ['id' => 'neck-warmers', 'name' => 'Neck Warmers', 'image' => 'assets/images/product-neck-warmers.jpg', 'order' => 20, 'online' => true],
         ['id' => 'pipos', 'name' => 'Pipos (coming soon)', 'image' => 'assets/images/product-pipos.jpg', 'order' => 30, 'online' => true],
     ],
+    'gallery' => [],
+    'customers' => [],
     'fabrics' => [
         ['id' => 'wetlook', 'name' => 'Wetlook', 'description' => 'Smooth, tightly woven surface with a distinctive glossy finish and light-reflecting folds.', 'image' => 'assets/images/fabric-wetlook.jpg', 'order' => 10, 'online' => true],
         ['id' => 'baby-pique', 'name' => 'Baby Piqué', 'description' => 'Fine, compact knitted texture with a small, closely spaced pattern and a subtle matte finish.', 'image' => 'assets/images/fabric-baby-pique.jpg', 'order' => 20, 'online' => true],
